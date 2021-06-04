@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageCreated;
+use App\Http\Resources\MessageResource;
+use App\Models\Chat;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,7 +19,18 @@ class MessageController extends Controller
      */
     public function index(User $sender)
     {
-        return Message::whereIn('sender_id', [Auth::id(), $sender->id])->orWhereIn('reciever_id', [Auth::id(), $sender->id])->latest('id')->get();
+
+        $chat = Auth::user()->chats->filter(fn($chat) => $sender->chats->contains($chat))->first();
+
+        if (!$chat) {
+            $chat = Chat::create();
+            $chat->users()->sync([Auth::id(), $sender->id]);
+        }
+
+        //return new MessageResource($chat->messages->first());
+        //return $chat;
+        return MessageResource::collection($chat->messages);
+
     }
 
     /**
@@ -35,21 +49,34 @@ class MessageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(User $sender)
     {
         $this->validate(request(), [
-            'reciever_id' => 'required|exists:messages',
+            //'reciever_id' => 'required|exists:messages',
             'body' => 'required|string',
             'type' => 'nullable|in:text',
         ]);
 
-        return Message::create([
-            'sender_id' => Auth::id(),
-            'reciever_id' => request()->reciever_id,
-            'body' => request()->body,
-            'type' => request()->type ?? 'text',
+        $chat = Auth::user()->chats->filter(fn($chat) => $sender->chats->contains($chat))->first();
 
-        ]);
+        if (!$chat) {
+            $chat = Chat::create();
+            $chat->users()->sync([Auth::id(), $sender->id]);
+        }
+
+        $message = Message::find(1);
+
+        /* $message = $chat->messages()->create([
+        'user_id' => Auth::id(),
+        'body' => request()->body,
+        'type' => request()->type ?? 'text',
+
+        ]); */
+
+        //broadcast(new MessageCreated($message));
+        MessageCreated::dispatch($message);
+
+        return new MessageResource($message);
 
     }
 

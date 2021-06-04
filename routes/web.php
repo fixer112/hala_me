@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,8 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-/* Route::get('/', function () {
-return view('welcome');
-}); */
+Route::get('/', function () {
+    Auth::login(User::find(2));
+    //return request()->user();
+    return view('welcome');
+});
 
-Route::fallback(fn() => abort(404));
+//Route::fallback(fn() => abort(404));

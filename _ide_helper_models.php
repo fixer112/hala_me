@@ -12,27 +12,48 @@
 
 namespace App\Models{
 /**
+ * App\Models\Chat
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Message[] $messages
+ * @property-read int|null $messages_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
+ * @property-read int|null $users_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat whereUpdatedAt($value)
+ */
+	class Chat extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Message
  *
  * @property int $id
- * @property int $sender_id
- * @property int $reciever_id
+ * @property int $user_id
+ * @property int $chat_id
  * @property string $body
  * @property string $type
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\User $reciever
+ * @property-read \App\Models\Chat $chat
  * @property-read \App\Models\User $sender
  * @method static \Illuminate\Database\Eloquent\Builder|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message query()
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereRecieverId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereSenderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereUserId($value)
  */
 	class Message extends \Eloquent {}
 }
@@ -50,6 +71,8 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Chat[] $chats
+ * @property-read int|null $chats_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
  * @property-read int|null $clients_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications

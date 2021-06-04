@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Message;
+use App\Models\Chat;
 use Illuminate\Database\Seeder;
 
 class MessageSeeder extends Seeder
@@ -14,27 +14,27 @@ class MessageSeeder extends Seeder
      */
     public function run()
     {
-        Message::create([
-            "sender_id" => 1,
-            "reciever_id" => 2,
+        $chat = Chat::create([]);
+
+        $chat->users()->sync([1, 2]);
+
+        $chat->messages()->create([
+            "user_id" => 1,
             "body" => "Hello",
         ]);
 
-        Message::create([
-            "sender_id" => 2,
-            "reciever_id" => 1,
+        $chat->messages()->create([
+            "user_id" => 2,
             "body" => "Hi, how are you?",
         ]);
 
-        Message::create([
-            "sender_id" => 1,
-            "reciever_id" => 2,
+        $chat->messages()->create([
+            "user_id" => 1,
             "body" => "Am doing fine! Wbu?",
         ]);
 
-        Message::create([
-            "sender_id" => 2,
-            "reciever_id" => 1,
+        $chat->messages()->create([
+            "user_id" => 2,
             "body" => "Am good too. Nice meeting you",
         ]);
 
