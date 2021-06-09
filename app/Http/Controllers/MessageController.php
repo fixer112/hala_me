@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\MessageCreated;
 use App\Http\Resources\MessageResource;
 use App\Models\Chat;
-use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +28,7 @@ class MessageController extends Controller
 
         //return new MessageResource($chat->messages->first());
         //return $chat;
+        $chat->messages->whereNotIn('user_id', [Auth::id()])->sortByDesc('id')->take(50)->each(fn($message) => $message->update(['read' => 1]));
         return MessageResource::collection($chat->messages);
 
     }
@@ -64,17 +64,17 @@ class MessageController extends Controller
             $chat->users()->sync([Auth::id(), $sender->id]);
         }
 
-        $message = Message::find(1);
+        //$message = Message::find(1);
 
-        /* $message = $chat->messages()->create([
-        'user_id' => Auth::id(),
-        'body' => request()->body,
-        'type' => request()->type ?? 'text',
+        $message = $chat->messages()->create([
+            'user_id' => Auth::id(),
+            'body' => request()->body,
+            'type' => request()->type ?? 'text',
 
-        ]); */
+        ]);
 
-        //broadcast(new MessageCreated($message));
-        MessageCreated::dispatch($message);
+        broadcast(new MessageCreated(new MessageResource($message)))->toOthers();
+        //MessageCreated::dispatch(new MessageResource($message));
 
         return new MessageResource($message);
 

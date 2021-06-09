@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserOnline;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use DB;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -15,13 +19,26 @@ class LoginController extends Controller
         ]);
 
         $user = User::where('phone_number', request()->phone_number)->first();
-
+        DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
         $user->tokens
             ->each(function ($token, $key) {
                 $this->revokeAccessAndRefreshTokens($token->id);
             });
 
-        return $user->createToken('hala_app')->accessToken;
+        $data = new UserResource($user->load('chats.users', 'chats.messages'));
+        $data['access_token'] = $user->createToken('hala_app')->accessToken;
+        broadcast(new UserOnline(new UserResource($user->load('chats.users', 'chats.messages'))))->toOthers();
+
+        return $data;
+
+    }
+
+    public function getUser()
+    {
+        $user = Auth::user();
+        $user->update(['online' => 1]);
+        broadcast(new UserOnline(new UserResource($user->load('chats.users', 'chats.messages'))))->toOthers();
+        return $data = new UserResource($user->load('chats.users', 'chats.messages'));
 
     }
 

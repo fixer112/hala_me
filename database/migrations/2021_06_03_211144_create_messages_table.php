@@ -19,6 +19,8 @@ class CreateMessagesTable extends Migration
             $table->bigInteger('chat_id');
             $table->text('body');
             $table->string('type')->default('text');
+            $table->boolean('read')->default(0);
+            $table->boolean('delivered')->default(1);
             $table->timestamps();
         });
     }

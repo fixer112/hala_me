@@ -16,6 +16,7 @@ class UserResource extends JsonResource
     {
         $data = parent::toArray($request);
         $data['chats'] = ChatResource::collection($this->whenLoaded('chats'));
+        $data['tokens'] = [];
         return $data;
     }
 }
