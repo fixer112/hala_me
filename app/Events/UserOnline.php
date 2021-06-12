@@ -2,13 +2,15 @@
 
 namespace App\Events;
 
-use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserOnline
+class UserOnline implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -18,9 +20,11 @@ class UserOnline
      *
      * @return void
      */
-    public function __construct(UserResource $user)
+    public function __construct(User $user, int $status = 1)
     {
         $this->user = $user;
+        $this->user->update(['online' => $status, 'updated_at' => now()]);
+
     }
 
     /**
@@ -30,6 +34,6 @@ class UserOnline
      */
     public function broadcastOn()
     {
-        return new Channel("User.{$this->user->id}");
+        return new PrivateChannel("user.{$this->user->id}");
     }
 }

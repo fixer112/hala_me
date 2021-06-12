@@ -16,6 +16,8 @@ class UserSeeder extends Seeder
     {
         User::create(['phone_number' => '2348106813749']);
         User::create(['phone_number' => '2348034235999']);
+        User::create(['phone_number' => '2348167929350']);
+        User::create(['phone_number' => '2348100561740']);
 
     }
 }

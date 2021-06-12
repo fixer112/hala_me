@@ -22,3 +22,8 @@ Broadcast::channel('chat.{message}', function ($user, Message $message) {
     return Auth::check();
     //return (int) $user->id === optional($message)->user_id;
 });
+
+Broadcast::channel('user.{id}', function ($user, $id) {
+    return Auth::check();
+    //return (int) $user->id === optional($message)->user_id;
+});

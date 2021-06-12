@@ -4,6 +4,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,7 +30,8 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:api'])->group(function () {
         Route::get('messages/{sender}', [MessageController::class, 'index']);
         Route::post('messages/create/{sender}', [MessageController::class, 'store']);
-        Route::get('user', [LoginController::class, 'getUser']);
+        Route::get('user', [UserController::class, 'index']);
+        Route::put('set_online', [UserController::class, 'setOnline']);
 
     });
 });

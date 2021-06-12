@@ -38,5 +38,11 @@ class MessageSeeder extends Seeder
             "body" => "Am good too. Nice meeting you",
         ]);
 
+        $chat = Chat::create([]);
+        $chat->users()->sync([1, 3]);
+
+        $chat = Chat::create([]);
+        $chat->users()->sync([1, 4]);
+
     }
 }

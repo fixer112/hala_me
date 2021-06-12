@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -33,6 +34,8 @@ class MessageCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
+        broadcast(new UserOnline(User::find($this->message->sender->id)))->toOthers();
+
         return new PrivateChannel("chat.{$this->message->chat->id}");
     }
 }

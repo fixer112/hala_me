@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Events\UserOnline;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -27,18 +26,9 @@ class LoginController extends Controller
 
         $data = new UserResource($user->load('chats.users', 'chats.messages'));
         $data['access_token'] = $user->createToken('hala_app')->accessToken;
-        broadcast(new UserOnline(new UserResource($user->load('chats.users', 'chats.messages'))))->toOthers();
+        //broadcast(new UserOnline($user))->toOthers();
 
         return $data;
-
-    }
-
-    public function getUser()
-    {
-        $user = Auth::user();
-        $user->update(['online' => 1]);
-        broadcast(new UserOnline(new UserResource($user->load('chats.users', 'chats.messages'))))->toOthers();
-        return $data = new UserResource($user->load('chats.users', 'chats.messages'));
 
     }
 

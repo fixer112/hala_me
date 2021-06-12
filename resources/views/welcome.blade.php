@@ -9,7 +9,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-
+        <script src="{{asset('js/app.js')}}"></script>
         <!-- Styles -->
         <style>
             /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
@@ -506,7 +506,7 @@
 
                             <div class="ml-12">
                                 <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laravel's robust library of first-party tools and libraries, such as <a
+                                    Laravels robust library of first-party tools and libraries, such as <a
                                         href="https://forge.laravel.com" class="underline">Forge</a>, <a
                                         href="https://vapor.laravel.com" class="underline">Vapor</a>, <a
                                         href="https://nova.laravel.com" class="underline">Nova</a>, and <a
@@ -558,10 +558,18 @@
                 </div>
             </div>
         </div>
-        <script src={{asset("js/app.js")}}></script>
+
         <script>
             $('document').ready(function(){
+                /*Echo.private('user.2')
+                .listen('UserOnline', (e) => {
+                console.log(e);
+                });
 
+                Echo.private('chat.1')
+                .listen('MessageCreated', (e) => {
+                console.log(e);
+                });*/
         });
         </script>
     </body>

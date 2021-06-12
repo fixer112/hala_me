@@ -20,7 +20,7 @@ class CreateMessagesTable extends Migration
             $table->text('body');
             $table->string('type')->default('text');
             $table->boolean('read')->default(0);
-            $table->boolean('delivered')->default(1);
+            $table->boolean('delivered')->default(0);
             $table->timestamps();
         });
     }

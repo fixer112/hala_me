@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageCreated;
+use App\Events\UserOnline;
+use App\Http\Resources\ChatResource;
 use App\Http\Resources\MessageResource;
 use App\Models\Chat;
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,10 +29,19 @@ class MessageController extends Controller
             $chat->users()->sync([Auth::id(), $sender->id]);
         }
 
-        //return new MessageResource($chat->messages->first());
-        //return $chat;
-        $chat->messages->whereNotIn('user_id', [Auth::id()])->sortByDesc('id')->take(50)->each(fn($message) => $message->update(['read' => 1]));
-        return MessageResource::collection($chat->messages);
+        $data = ['delivered' => 1];
+
+        if (!request()->read || request()->read != 0) {
+            $data['read'] = 1;
+        }
+
+        if (!request()->online || request()->online == 1) {
+            broadcast(new UserOnline(Auth::user()))->toOthers();
+        }
+
+        $chat->messages->whereNotIn('user_id', [Auth::id()])->sortByDesc('id')->filter(fn($message) => $message->delivered == 0 || $message->read == 0)->take(10)->each(fn($message) => $message->update($data));
+
+        return new ChatResource($chat->load(['messages', 'users']));
 
     }
 
@@ -76,7 +88,7 @@ class MessageController extends Controller
         broadcast(new MessageCreated(new MessageResource($message)))->toOthers();
         //MessageCreated::dispatch(new MessageResource($message));
 
-        return new MessageResource($message);
+        return new MessageResource(Message::find($message->id));
 
     }
 
@@ -123,5 +135,6 @@ class MessageController extends Controller
     public function destroy($id)
     {
         //
+
     }
 }
