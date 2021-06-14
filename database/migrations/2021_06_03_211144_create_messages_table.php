@@ -21,7 +21,7 @@ class CreateMessagesTable extends Migration
             $table->string('type')->default('text');
             $table->boolean('read')->default(0);
             $table->boolean('delivered')->default(0);
-            $table->longText('uid')->unique();
+            $table->string('uid')->unique();
             $table->timestamps();
         });
     }
