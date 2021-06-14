@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -19,5 +20,7 @@ Route::get('/', function () {
     //return request()->user();
     return view('welcome');
 });
+
+Route::get('test', [Controller::class, 'test']);
 
 //Route::fallback(fn() => abort(404));

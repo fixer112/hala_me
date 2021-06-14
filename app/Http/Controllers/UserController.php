@@ -13,7 +13,12 @@ class UserController extends Controller
         $user = Auth::user();
 
         //return UserOnline::dispatch($user);
-        broadcast(new UserOnline($user))->toOthers();
+        try {
+            broadcast(new UserOnline($user))->toOthers();
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         return $data = new UserResource($user->load('chats.users', 'chats.messages'));
 
     }
@@ -26,7 +31,12 @@ class UserController extends Controller
 
         $status = (int) request()->status;
 
-        broadcast(new UserOnline(Auth::user(), $status))->toOthers();
+        try {
+            broadcast(new UserOnline(Auth::user(), $status))->toOthers();
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
 
         return Auth::user();
     }

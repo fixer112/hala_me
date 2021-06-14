@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ChatLoaded;
 use App\Events\MessageCreated;
 use App\Events\UserOnline;
 use App\Http\Resources\ChatResource;
@@ -11,6 +12,7 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class MessageController extends Controller
 {
@@ -36,12 +38,24 @@ class MessageController extends Controller
         }
 
         if (!request()->online || request()->online == 1) {
-            broadcast(new UserOnline(Auth::user()))->toOthers();
+            try {
+                //code...
+                broadcast(new UserOnline(Auth::user()))->toOthers();
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         }
 
         $chat->messages->whereNotIn('user_id', [Auth::id()])->sortByDesc('id')->filter(fn($message) => $message->delivered == 0 || $message->read == 0)->take(10)->each(fn($message) => $message->update($data));
 
-        return new ChatResource($chat->load(['messages', 'users']));
+        $data = new ChatResource($chat->load(['messages', 'users']));
+        try {
+            broadcast(new ChatLoaded($data))->toOthers();
+        } catch (\Throwable $th) {
+
+        }
+
+        return $data;
 
     }
 
@@ -67,6 +81,7 @@ class MessageController extends Controller
             //'reciever_id' => 'required|exists:messages',
             'body' => 'required|string',
             'type' => 'nullable|in:text',
+            'uid' => 'nullable|string|unique:messages',
         ]);
 
         $chat = Auth::user()->chats->filter(fn($chat) => $sender->chats->contains($chat))->first();
@@ -82,6 +97,7 @@ class MessageController extends Controller
             'user_id' => Auth::id(),
             'body' => request()->body,
             'type' => request()->type ?? 'text',
+            'uid' => request()->uid ?? Str::uuid(),
 
         ]);
 
