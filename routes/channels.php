@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -23,7 +24,7 @@ Broadcast::channel('chat.{message}', function ($user, Message $message) {
     //return (int) $user->id === optional($message)->user_id;
 });
 
-Broadcast::channel('user.{id}', function ($user, $id) {
+Broadcast::channel('user.{user}', function ($user, User $u) {
     return Auth::check();
     //return (int) $user->id === optional($message)->user_id;
 });

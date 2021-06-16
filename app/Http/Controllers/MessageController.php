@@ -41,7 +41,7 @@ class MessageController extends Controller
             try {
                 //code...
                 broadcast(new UserOnline(Auth::user()))->toOthers();
-            } catch (\Throwable $th) {
+            } catch (\Throwable$th) {
                 //throw $th;
             }
         }
@@ -51,7 +51,7 @@ class MessageController extends Controller
         $data = new ChatResource($chat->load(['messages', 'users']));
         try {
             broadcast(new ChatLoaded($data))->toOthers();
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
 
         }
 

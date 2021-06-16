@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\MessageCreated;
-use App\Http\Resources\MessageResource;
+use App\Events\ChatLoaded;
+use App\Http\Resources\ChatResource;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -18,8 +18,8 @@ class Controller extends BaseController
 
     public function test()
     {
-        Auth::login(User::find(1));
-        MessageCreated::dispatch(new MessageResource(Chat::find(request()->id ?? 1)->messages->first()));
+        Auth::login(User::find(2));
+        broadcast(new ChatLoaded(new ChatResource(Chat::find(request()->id ?? 1)->load(['messages', 'users']))))->toOthers();
         //broadcast(new MessageCreated(new MessageResource(Chat::find(1)->messages->first())))->toOthers();
 
     }
