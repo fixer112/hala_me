@@ -37,7 +37,7 @@ class MessageController extends Controller
             $data['read'] = 1;
         }
 
-        if (!request()->online || request()->online == 1) {
+        if (request()->online == 1) {
             try {
                 //code...
                 broadcast(new UserOnline(Auth::user()))->toOthers();
@@ -81,7 +81,7 @@ class MessageController extends Controller
             //'reciever_id' => 'required|exists:messages',
             'body' => 'required|string',
             'type' => 'nullable|in:text',
-            'uid' => 'nullable|string|unique:messages',
+            'uid' => 'nullable|string',
         ]);
 
         $chat = Auth::user()->chats->filter(fn($chat) => $sender->chats->contains($chat))->first();
@@ -92,14 +92,20 @@ class MessageController extends Controller
         }
 
         //$message = Message::find(1);
+        $message = Message::where('uid', request()->uid)->first();
+        if (!$message) {
+            $message = $chat->messages()->create([
+                'user_id' => Auth::id(),
+                'body' => request()->body,
+                'type' => request()->type ?? 'text',
+                'uid' => request()->uid ?? Str::uuid(),
 
-        $message = $chat->messages()->create([
-            'user_id' => Auth::id(),
-            'body' => request()->body,
-            'type' => request()->type ?? 'text',
-            'uid' => request()->uid ?? Str::uuid(),
+            ]);
+        }
 
-        ]);
+        if (!in_array(($sender->id), $message->chat->users->pluck('id')->toArray())) {
+            abort(422, 'Uid taken.');
+        }
 
         broadcast(new MessageCreated(new MessageResource($message)))->toOthers();
         //MessageCreated::dispatch(new MessageResource($message));
