@@ -33,7 +33,7 @@ class MessageController extends Controller
 
         $data = ['delivered' => 1];
 
-        if (!request()->read || request()->read != 0) {
+        if (request()->read != 0) {
             $data['read'] = 1;
         }
 
