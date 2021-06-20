@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use DB;
-use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {

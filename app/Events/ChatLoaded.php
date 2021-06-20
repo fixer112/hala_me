@@ -34,7 +34,11 @@ class ChatLoaded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        broadcast(new UserOnline(User::find($this->message->sender->id)))->toOthers();
+        try {
+            broadcast(new UserOnline(User::find($this->message->sender->id)))->toOthers();
+        } catch (\Throwable$th) {
+            //throw $th;
+        }
 
         return new PrivateChannel("chat.{$this->chat->id}");
     }

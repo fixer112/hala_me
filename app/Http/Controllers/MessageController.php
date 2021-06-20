@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Events\ChatLoaded;
 use App\Events\MessageCreated;
-use App\Events\UserOnline;
 use App\Http\Resources\ChatResource;
 use App\Http\Resources\MessageResource;
 use App\Models\Chat;
@@ -33,17 +32,8 @@ class MessageController extends Controller
 
         $data = ['delivered' => 1];
 
-        if (request()->read != 0) {
+        if (!request()->read || request()->read != 0) {
             $data['read'] = 1;
-        }
-
-        if (request()->online == 1) {
-            try {
-                //code...
-                broadcast(new UserOnline(Auth::user()))->toOthers();
-            } catch (\Throwable$th) {
-                //throw $th;
-            }
         }
 
         $chat->messages->whereNotIn('user_id', [Auth::id()])->sortByDesc('id')->filter(fn($message) => $message->delivered == 0 || $message->read == 0)->take(10)->each(fn($message) => $message->update($data));
@@ -107,7 +97,12 @@ class MessageController extends Controller
             abort(422, 'Uid taken.');
         }
 
-        broadcast(new MessageCreated(new MessageResource($message)))->toOthers();
+        try {
+            broadcast(new MessageCreated(new MessageResource($message)))->toOthers();
+
+        } catch (\Throwable$th) {
+            //throw $th;
+        }
         //MessageCreated::dispatch(new MessageResource($message));
 
         return new MessageResource(Message::find($message->id));
