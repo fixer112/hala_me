@@ -30,7 +30,11 @@ class MessageController extends Controller
             $chat->users()->sync([Auth::id(), $sender->id]);
         }
 
-        $data = ['delivered' => 1, 'read' => 1];
+        $read = request()->read == '0' ? 0 : 1;
+
+        //return $read;
+
+        $data = ['delivered' => 1, 'read' => $read];
 
         //if (!request()->read || request()->read != 0) {
         //$data['read'] = 1;
