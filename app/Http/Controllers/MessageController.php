@@ -23,30 +23,30 @@ class MessageController extends Controller
     public function index(User $sender)
     {
 
-        $chat = Auth::user()->chats->filter(fn($chat) => $sender->chats->contains($chat))->first();
+        $chat = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat))->first();
 
         if (!$chat) {
             $chat = Chat::create();
             $chat->users()->sync([Auth::id(), $sender->id]);
         }
 
-        $data = ['delivered' => 1];
+        $data = ['delivered' => 1, 'read' => 1];
 
-        if (!request()->read || request()->read != 0) {
-            $data['read'] = 1;
-        }
+        //if (!request()->read || request()->read != 0) {
+        //$data['read'] = 1;
+        //}
 
-        $chat->messages->whereNotIn('user_id', [Auth::id()])->sortByDesc('id')->filter(fn($message) => $message->delivered == 0 || $message->read == 0)->take(10)->each(fn($message) => $message->update($data));
-
+        //return Auth::id();
+        $chat->messages->whereNotIn('user_id', [Auth::id()])->sortByDesc('id')->filter(fn ($message) => $message->delivered == 0 || $message->read == 0)->each(fn ($message) => $message->update($data));
+        //return $chat->messages->whereNotIn('user_id', [Auth::id()])->where('read', 0);
+        //return $chat->messages->sortByDesc('id')->first();
         $data = new ChatResource($chat->load(['messages', 'users']));
         try {
             broadcast(new ChatLoaded($data))->toOthers();
-        } catch (\Throwable$th) {
-
+        } catch (\Throwable $th) {
         }
 
         return $data;
-
     }
 
     /**
@@ -56,7 +56,6 @@ class MessageController extends Controller
      */
     public function create(User $sender)
     {
-
     }
 
     /**
@@ -74,7 +73,7 @@ class MessageController extends Controller
             'uid' => 'nullable|string',
         ]);
 
-        $chat = Auth::user()->chats->filter(fn($chat) => $sender->chats->contains($chat))->first();
+        $chat = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat))->first();
 
         if (!$chat) {
             $chat = Chat::create();
@@ -99,14 +98,12 @@ class MessageController extends Controller
 
         try {
             broadcast(new MessageCreated(new MessageResource($message)))->toOthers();
-
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             //throw $th;
         }
         //MessageCreated::dispatch(new MessageResource($message));
 
         return new MessageResource(Message::find($message->id));
-
     }
 
     /**
