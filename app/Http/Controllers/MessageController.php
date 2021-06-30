@@ -33,6 +33,9 @@ class MessageController extends Controller
 
         $read = request()->read == '0' ? 0 : 1;
 
+        $notify =
+            request()->notify == '0' ? 0 : 1;
+
         //return $read;
 
         $data = ['delivered' => 1, 'read' => $read];
@@ -46,11 +49,13 @@ class MessageController extends Controller
         //return $chat->messages->whereNotIn('user_id', [Auth::id()])->where('read', 0);
         //return $chat->messages->sortByDesc('id')->first();
         $data = new ChatResource($chat->load(['messages', 'users']));
-        try {
-            broadcast(new ChatLoaded($data))->toOthers();
-        } catch (\Throwable $th) {
+        if ($notify == 1) {
+            //return $notify;
+            try {
+                broadcast(new ChatLoaded($data))->toOthers();
+            } catch (\Throwable $th) {
+            }
         }
-
         return $data;
     }
 
