@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Events\UserOnline;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
@@ -38,5 +39,11 @@ class UserController extends Controller
         }
         return 1;
         //return Auth::user();
+    }
+
+    public function checkNumbers()
+    {
+        $numbers = json_decode(request()->numbers, true);
+        return User::whereIn('phone_number', formatPhoneNumbers($numbers))->pluck('phone_number')->toArray();
     }
 }

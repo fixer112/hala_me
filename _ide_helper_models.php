@@ -40,6 +40,9 @@ namespace App\Models{
  * @property int $chat_id
  * @property string $body
  * @property string $type
+ * @property int $read
+ * @property int $delivered
+ * @property string $uid
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Chat $chat
@@ -50,8 +53,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereDelivered($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereRead($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUserId($value)
  */
@@ -68,6 +74,7 @@ namespace App\Models{
  * @property string|null $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string|null $username
+ * @property int $online
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -88,6 +95,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereOnline($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePhoneNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
