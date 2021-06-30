@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\HomeController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -16,10 +17,14 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::get('/', function () {
+    return redirect('/privacy');
     Auth::login(User::find(2));
     //return request()->user();
     return view('welcome');
 });
+
+
+Route::get('/privacy', [HomeController::class, 'privacy']);
 
 Route::get('test', [Controller::class, 'test']);
 
