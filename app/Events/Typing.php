@@ -2,29 +2,30 @@
 
 namespace App\Events;
 
-use App\Http\Resources\MessageResource;
-use App\Models\Message;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class MessageCreated implements ShouldBroadcast
+class Typing implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public $user_id;
+    public $chat_id;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(MessageResource $message)
+    public function __construct($chat_id,  $user_id)
     {
-        $this->message = $message;
+        $this->user_id = $user_id;
+        $this->chat_id = $chat_id;
     }
 
     /**
@@ -35,11 +36,11 @@ class MessageCreated implements ShouldBroadcast
     public function broadcastOn()
     {
         try {
-            broadcast(new UserOnline(User::find($this->message->sender->id)))->toOthers();
+            broadcast(new UserOnline(User::find($this->user_id)))->toOthers();
         } catch (\Throwable $th) {
             //throw $th;
         }
 
-        return new PrivateChannel("chat.{$this->message->chat->id}");
+        return new PrivateChannel("chat.{$this->chat_id}");
     }
 }

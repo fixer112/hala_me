@@ -20,7 +20,6 @@ class UserController extends Controller
             //throw $th;
         }
         return $data = new UserResource($user->load('chats.users', 'chats.messages'));
-
     }
 
     public function setOnline()
@@ -37,7 +36,7 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
         }
-
-        return Auth::user();
+        return 1;
+        //return Auth::user();
     }
 }

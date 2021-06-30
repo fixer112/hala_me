@@ -21,7 +21,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('chat.{chat}', function ($user, Chat $chat) {
-    return Auth::check();
+    return  Auth::check();
     //return (int) $user->id === optional($message)->user_id;
 });
 

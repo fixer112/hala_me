@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
+use App\Models\User;
+use App\Events\Typing;
+use App\Models\Message;
 use App\Events\ChatLoaded;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Events\MessageCreated;
 use App\Http\Resources\ChatResource;
-use App\Http\Resources\MessageResource;
-use App\Models\Chat;
-use App\Models\Message;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use App\Http\Resources\MessageResource;
 
 class MessageController extends Controller
 {
@@ -154,5 +155,23 @@ class MessageController extends Controller
     {
         //
 
+    }
+
+    function typing(User $sender)
+    {
+
+        $chat = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat))->first();
+        //return $chat->id;
+
+        if (!$chat) {
+            $chat = Chat::create();
+            $chat->users()->sync([Auth::id(), $sender->id]);
+        }
+
+        try {
+            broadcast(new Typing($chat->id, Auth::id()))->toOthers();
+        } catch (\Throwable $th) {
+        }
+        return true;
     }
 }
