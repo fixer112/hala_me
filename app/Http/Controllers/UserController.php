@@ -43,7 +43,8 @@ class UserController extends Controller
 
     public function checkNumbers()
     {
+        //return request()->numbers;
         $numbers = json_decode(request()->numbers, true);
-        return User::whereIn('phone_number', formatPhoneNumbers($numbers))->pluck('phone_number')->toArray();
+        return User::whereIn('phone_number', formatPhoneNumbers($numbers))->pluck('id', 'phone_number')->toArray();
     }
 }

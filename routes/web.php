@@ -25,6 +25,7 @@ Route::get('/', function () {
 
 
 Route::get('/privacy', [HomeController::class, 'privacy']);
+Route::get('/terms', [HomeController::class, 'terms']);
 
 Route::get('test', [Controller::class, 'test']);
 
