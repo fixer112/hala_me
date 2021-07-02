@@ -17,3 +17,20 @@ function formatPhoneNumbers(array $numbers)
     }
     return $new;
 }
+
+function verifyNumber(String $number)
+{
+    $number = str_replace(' ', '', $number);
+    if (Str::startsWith($number, '+234')) {
+        $number = str_replace('+', '', $number);
+    }
+    if (!Str::startsWith($number, '234')) {
+        return false;
+    }
+
+    if (Str::length($number) != 13) {
+        return false;
+    }
+
+    return true;
+}

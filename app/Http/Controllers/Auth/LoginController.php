@@ -13,10 +13,19 @@ class LoginController extends Controller
     {
 
         $this->validate(request(), [
-            'phone_number' => 'required|exists:users',
+            'phone_number' => 'required',
         ]);
 
         $user = User::where('phone_number', request()->phone_number)->first();
+
+        if (!$user) {
+            $result = verifyNumber(request()->phone_number);
+            if (!$result) {
+                abort(400, "Invalid number. Start with 234 and 13 digit.");
+            }
+            $user = User::create(['phone_number' => request()->phone_number]);
+        }
+
         DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
         $user->tokens
             ->each(function ($token, $key) {
@@ -28,7 +37,6 @@ class LoginController extends Controller
         //broadcast(new UserOnline($user))->toOthers();
 
         return $data;
-
     }
 
     protected function revokeAccessAndRefreshTokens($tokenId)
