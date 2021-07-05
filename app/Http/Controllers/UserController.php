@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
 use App\Models\User;
 use App\Events\UserOnline;
+use App\Events\MessageCreated;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\MessageResource;
 
 class UserController extends Controller
 {
@@ -20,6 +23,17 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
         }
+
+        if ($user->chats->count() > 0) {
+            $messages =  $user->chats->toQuery()->join('messages', 'messages.chat_id', 'chats.id')->where('messages.alerted', 0)->get();
+            $messages->each(function ($message) {
+                try {
+                    broadcast(new MessageCreated(new MessageResource($message)))->toOthers();
+                } catch (\Throwable $th) {
+                }
+            });
+        }
+
         return $data = new UserResource($user->load('chats.users', 'chats.messages'));
     }
 

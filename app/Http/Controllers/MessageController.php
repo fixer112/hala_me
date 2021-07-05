@@ -162,7 +162,7 @@ class MessageController extends Controller
 
     }
 
-    function typing(User $sender)
+    public function typing(User $sender)
     {
 
         $chat = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat))->first();
@@ -178,5 +178,12 @@ class MessageController extends Controller
         } catch (\Throwable $th) {
         }
         return true;
+    }
+
+    function alertRecieved(Message $message)
+    {
+        $alerted = request()->alerted == '0' ? 0 : 1;
+        $message->update(['alerted' => $alerted]);
+        return $message;
     }
 }

@@ -18,6 +18,14 @@ class LoginController extends Controller
 
         $user = User::where('phone_number', request()->phone_number)->first();
 
+        /* if (request()->device_id && isEmptyOrNullString($user->device_id)) {
+            $user->update(['device_id' => request()->device_id]);
+        }
+
+        if($user->device_id != request()->device_id){
+
+        } */
+
         if (!$user) {
             $result = verifyNumber(request()->phone_number);
             if (!$result) {

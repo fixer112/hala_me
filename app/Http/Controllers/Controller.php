@@ -20,7 +20,8 @@ class Controller extends BaseController
 
     public function test()
     {
-        return Str::substr('08034235999', 1);
+        $user = User::find(1);
+        return $user->image_url;
         Auth::login(User::find(2));
 
         broadcast(new UserOnline(User::find(2)))->toOthers();

@@ -32,7 +32,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'device_id',
     ];
+
+    protected $appends = ['image_url'];
 
     /**
      * The attributes that should be cast to native types.
@@ -48,4 +51,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Chat::class);
     }
 
+    public function getImageUrlAttribute()
+    {
+        return 'https://hala.fixer.com/avatar.png';
+    }
 }

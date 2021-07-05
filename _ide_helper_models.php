@@ -43,6 +43,8 @@ namespace App\Models{
  * @property int $read
  * @property int $delivered
  * @property string $uid
+ * @property int $encrypted
+ * @property int $alerted
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Chat $chat
@@ -50,10 +52,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereAlerted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereDelivered($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereEncrypted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereRead($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereType($value)
@@ -75,6 +79,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string|null $username
  * @property int $online
+ * @property string|null $device_id
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -82,6 +87,7 @@ namespace App\Models{
  * @property-read int|null $chats_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
  * @property-read int|null $clients_count
+ * @property-read mixed $image_url
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
@@ -91,6 +97,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereDeviceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)

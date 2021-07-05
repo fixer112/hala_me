@@ -22,6 +22,8 @@ class CreateMessagesTable extends Migration
             $table->boolean('read')->default(0);
             $table->boolean('delivered')->default(0);
             $table->string('uid')->unique();
+            $table->boolean('encrypted')->default(1);
+            $table->boolean('alerted')->default(0);
             $table->timestamps();
         });
     }
