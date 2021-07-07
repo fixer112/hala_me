@@ -55,7 +55,7 @@ class LoginController extends Controller
 
 
         if ($user->otp != request()->otp) {
-            abort(401, 'Invalid OTP.' . $user->otp);
+            abort(401, 'Invalid OTP.' . request()->otp);
         }
 
         DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
