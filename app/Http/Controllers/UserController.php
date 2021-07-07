@@ -15,7 +15,6 @@ class UserController extends Controller
     public function index()
     {
         $user = Auth::user();
-
         //return UserOnline::dispatch($user);
         try {
             broadcast(new UserOnline($user))->toOthers();

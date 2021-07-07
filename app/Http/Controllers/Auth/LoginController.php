@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use DB;
+use App\Traits\Sms;
+use App\Models\User;
+use App\Traits\Event;
+use App\Events\UserOnline;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Models\User;
-use DB;
 
 class LoginController extends Controller
 {
@@ -13,10 +16,24 @@ class LoginController extends Controller
     {
 
         $this->validate(request(), [
-            'phone_number' => 'required',
+            'phone_number' => 'required|starts_with:234|size:13',
         ]);
 
-        $user = User::where('phone_number', request()->phone_number)->first();
+        $number = formatPhoneNumbers([request()->phone_number])[0];
+
+        $user = User::where('phone_number', $number)->first();
+
+        if (empty(request()->otp)) {
+            if (empty($user->otp)) {
+                $rand = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9); //. rand(0, 9) . rand(0, 9);
+                $message = "Your secure otp is $rand.";
+                Sms::sendSms(str_replace('234', '', $user->phone_number), $message);
+                $user->update(['otp' => $rand]);
+                //send sms
+            }
+
+            return 'otp sent';
+        }
 
         /* if (request()->device_id && isEmptyOrNullString($user->device_id)) {
             $user->update(['device_id' => request()->device_id]);
@@ -27,11 +44,16 @@ class LoginController extends Controller
         } */
 
         if (!$user) {
-            $result = verifyNumber(request()->phone_number);
+            $result = verifyNumber($number);
             if (!$result) {
                 abort(400, "Invalid number. Start with 234 and 13 digit.");
             }
-            $user = User::create(['phone_number' => request()->phone_number]);
+
+            $user = User::create(['phone_number' => $number]);
+        }
+
+        if ($user->otp != request()->otp) {
+            abort(401, 'Invalid OTP.' . $user->otp);
         }
 
         DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();

@@ -53,6 +53,6 @@ class User extends Authenticatable
 
     public function getImageUrlAttribute()
     {
-        return 'https://hala.fixer.com/avatar.png';
+        return '/avatar.png';
     }
 }

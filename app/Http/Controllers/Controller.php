@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Traits\Sms;
 use App\Models\Chat;
 use App\Models\User;
 use App\Events\ChatLoaded;
@@ -21,6 +23,7 @@ class Controller extends BaseController
     public function test()
     {
         $user = User::find(1);
+        //return Sms::sendSms('8106813749', 'test');
         return $user->image_url;
         Auth::login(User::find(2));
 

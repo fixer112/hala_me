@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->boolean('online')->default(0);
             $table->string('device_id')->nullable();
             $table->string('profile_pic')->nullable();
+            $table->string('otp')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
