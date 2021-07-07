@@ -23,6 +23,15 @@ class LoginController extends Controller
 
         $user = User::where('phone_number', $number)->first();
 
+        if (!$user) {
+            $result = verifyNumber($number);
+            if (!$result) {
+                abort(400, "Invalid number. Start with 234 and 13 digit.");
+            }
+
+            $user = User::create(['phone_number' => $number]);
+        }
+
         if (empty(request()->otp)) {
             if (empty($user->otp)) {
                 $rand = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9); //. rand(0, 9) . rand(0, 9);
@@ -43,14 +52,7 @@ class LoginController extends Controller
 
         } */
 
-        if (!$user) {
-            $result = verifyNumber($number);
-            if (!$result) {
-                abort(400, "Invalid number. Start with 234 and 13 digit.");
-            }
 
-            $user = User::create(['phone_number' => $number]);
-        }
 
         if ($user->otp != request()->otp) {
             abort(401, 'Invalid OTP.' . $user->otp);
