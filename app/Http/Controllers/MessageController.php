@@ -26,7 +26,7 @@ class MessageController extends Controller
 
         $chats = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat));
 
-        while ($chats->count > 1) {
+        while ($chats->count() > 1) {
             $chats->last()->delete();
             $chats = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat));
         }
