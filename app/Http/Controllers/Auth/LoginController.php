@@ -16,7 +16,7 @@ class LoginController extends Controller
     {
 
         $this->validate(request(), [
-            'phone_number' => 'required|starts_with:234|size:13|numeric',
+            'phone_number' => 'required|starts_with:234|digits:13|numeric',
         ]);
 
         $number = formatPhoneNumbers([request()->phone_number])[0];
