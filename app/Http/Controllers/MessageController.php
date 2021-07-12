@@ -24,7 +24,14 @@ class MessageController extends Controller
     public function index(User $sender)
     {
 
-        $chat = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat))->first();
+        $chats = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat));
+
+        while ($chats->count > 1) {
+            $chats->last()->delete();
+            $chats = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat));
+        }
+
+        $chat = $chats->first();
 
         if (!$chat) {
             $chat = Chat::create();
