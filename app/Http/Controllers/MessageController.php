@@ -128,11 +128,11 @@ class MessageController extends Controller
             ]
         )->post('https://fcm.googleapis.com/fcm/send', [
 
-            "registration_ids" => [Auth::user()->fcm_token],
-            "notification" => [
+            "registration_ids" => [$sender->fcm_token],
+            /*  "notification" => [
                 "title" => "FCM",
                 "body" => "messaging tutorial"
-            ],
+            ], */
             "data" => $mr
         ]);
         //MessageCreated::dispatch(new MessageResource($message));
