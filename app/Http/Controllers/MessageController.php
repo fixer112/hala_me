@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Events\MessageCreated;
 use App\Http\Resources\ChatResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use App\Http\Resources\MessageResource;
 
 class MessageController extends Controller
@@ -112,12 +113,28 @@ class MessageController extends Controller
         if (!in_array(($sender->id), $message->chat->users->pluck('id')->toArray())) {
             abort(422, 'Uid taken.');
         }
+        $mr = new MessageResource($message);
 
         try {
-            broadcast(new MessageCreated(new MessageResource($message)))->toOthers();
+            broadcast(new MessageCreated($mr))->toOthers();
         } catch (\Throwable $th) {
             //throw $th;
         }
+
+        $res = Http::withHeaders(
+            [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . env('FCM_KEY'),
+            ]
+        )->post('https://fcm.googleapis.com/fcm/send', [
+
+            "registration_ids" => [Auth::user()->fcm_token],
+            "notification" => [
+                "title" => "FCM",
+                "body" => "messaging tutorial"
+            ],
+            "data" => $mr
+        ]);
         //MessageCreated::dispatch(new MessageResource($message));
 
         return new MessageResource(Message::find($message->id));

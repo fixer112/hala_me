@@ -60,4 +60,15 @@ class UserController extends Controller
         $numbers = json_decode(request()->numbers, true);
         return User::whereIn('phone_number', formatPhoneNumbers($numbers))->pluck('id', 'phone_number')->toArray();
     }
+
+    public function updateFcmToken()
+    {
+        $this->validate(request(), [
+            'token' => 'required|string',
+        ]);
+
+        Auth::user()->update(['fcm_token' => request()->token]);
+
+        return Auth::user();
+    }
 }

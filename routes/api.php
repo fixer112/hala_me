@@ -35,5 +35,6 @@ Route::prefix('v1')->group(function () {
         Route::put('set_online', [UserController::class, 'setOnline']);
         Route::post('typing/{sender}', [MessageController::class, 'typing']);
         Route::post('check_numbers', [UserController::class, 'checkNumbers']);
+        Route::put('update_fcm_token', [UserController::class, 'updateFcmToken']);
     });
 });
