@@ -31,6 +31,8 @@ Route::prefix('v1')->group(function () {
         Route::get('messages/{sender}', [MessageController::class, 'index']);
         Route::post('messages/create/{sender}', [MessageController::class, 'store']);
         Route::post('message/alert/{message}', [MessageController::class, 'alertRecieved']);
+        Route::delete('messages/delete', [MessageController::class, 'deleteMessages']);
+        Route::delete('chat/delete/{sender}', [MessageController::class, 'deleteChats']);
         Route::get('user', [UserController::class, 'index']);
         Route::put('set_online', [UserController::class, 'setOnline']);
         Route::post('typing/{sender}', [MessageController::class, 'typing']);

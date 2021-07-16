@@ -186,6 +186,50 @@ class MessageController extends Controller
 
     }
 
+    public function deleteMessages(array $ids = null)
+    {
+        $user = Auth::user();
+        $uids = !is_null($ids) ? $ids : (request()->ids ?  json_decode(request()->ids, true) : []);
+        //return $uids;
+        $messages = $user->messages->whereIn('uid', $uids);
+
+        $others = collect($uids)->diff($messages->pluck('uid')->toArray())->values();
+
+        //return $others;
+
+
+        Message::whereIn('uid', $others)->update(['hidden' => 1]);
+
+
+
+        if ($messages->count() > 0) {
+            $messages = $messages->toQuery();
+            $messages->delete();
+        }
+
+        //return $messages;
+
+        return true;
+    }
+
+    public function deleteChats(User $sender)
+    {
+
+        $chat = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat))->first();
+
+        if (!$chat) {
+            $chat = Chat::create();
+            $chat->users()->sync([Auth::id(), $sender->id]);
+        }
+
+        $ids = $chat->messages->pluck('uid')->toArray();
+        return $this->deleteMessages($ids);
+        return $ids;
+
+        return true;
+    }
+
+
     public function typing(User $sender)
     {
 
