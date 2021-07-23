@@ -33,7 +33,8 @@ class LoginController extends Controller
         }
 
         if (empty(request()->otp)) {
-            if (empty($user->otp)) {
+
+            if ($user->updated_at->diffInDays() >= 1) {
                 $rand = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9); //. rand(0, 9) . rand(0, 9);
                 $message = "Your secure otp is $rand.";
                 Sms::sendSms(str_replace('234', '', $user->phone_number), $message);
