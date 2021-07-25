@@ -34,7 +34,7 @@ class LoginController extends Controller
 
         if (empty(request()->otp)) {
 
-            if ($user->updated_at->diffInDays() >= 1 || empty($user->otp)) {
+            if ((!empty($user->last_login) && $user->last_login->diffInDays() >= 1) || empty($user->otp)) {
                 $rand = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9); //. rand(0, 9) . rand(0, 9);
                 $message = "Your secure otp is $rand.";
                 Sms::sendSms(str_replace('234', '', $user->phone_number), $message);
@@ -68,7 +68,7 @@ class LoginController extends Controller
         $data = new UserResource($user->load('chats.users', 'chats.messages'));
         $data['access_token'] = $user->createToken('hala_app')->accessToken;
         //broadcast(new UserOnline($user))->toOthers();
-
+        $user->update(['last_login' => now()]);
         return $data;
     }
 

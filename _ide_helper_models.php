@@ -17,6 +17,7 @@ namespace App\Models{
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Message[] $messages
  * @property-read int|null $messages_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
@@ -26,6 +27,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Query\Builder|Chat onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat query()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Chat withTrashed()
@@ -50,6 +52,8 @@ namespace App\Models{
  * @property int $alerted
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $hidden
  * @property-read \App\Models\Chat $chat
  * @property-read \App\Models\User $sender
  * @method static \Illuminate\Database\Eloquent\Builder|Message newModelQuery()
@@ -60,8 +64,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereDelivered($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereHidden($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereRead($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereType($value)
@@ -92,6 +98,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $fcm_token
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Chat[] $chats
  * @property-read int|null $chats_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
@@ -109,6 +116,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Query\Builder|User onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDeviceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
