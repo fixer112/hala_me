@@ -89,6 +89,7 @@ class MessageController extends Controller
             'body' => 'required|string',
             'type' => 'nullable|in:text',
             'uid' => 'nullable|string',
+            'replied_id' => 'nullable|integer|exists:messages,id',
         ]);
 
         $chat = Auth::user()->chats->filter(fn ($chat) => $sender->chats->contains($chat))->first();
@@ -106,6 +107,7 @@ class MessageController extends Controller
                 'body' => request()->body,
                 'type' => request()->type ?? 'text',
                 'uid' => request()->uid ?? Str::uuid(),
+                'replied_id' => request()->replied_id ?? null,
 
             ]);
         }

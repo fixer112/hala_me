@@ -54,7 +54,10 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property int $hidden
+ * @property int|null $replied_id
+ * @property int|null $status_id
  * @property-read \App\Models\Chat $chat
+ * @property-read Message|null $repliedMessage
  * @property-read \App\Models\User $sender
  * @method static \Illuminate\Database\Eloquent\Builder|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message newQuery()
@@ -70,6 +73,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereHidden($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereRead($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereRepliedId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUpdatedAt($value)
@@ -99,6 +104,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $fcm_token
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $last_login
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Chat[] $chats
  * @property-read int|null $chats_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
@@ -122,6 +128,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFcmToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLastLogin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereOnline($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereOtp($value)

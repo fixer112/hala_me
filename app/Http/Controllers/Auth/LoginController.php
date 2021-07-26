@@ -39,6 +39,7 @@ class LoginController extends Controller
                 $message = "Your secure otp is $rand.";
                 Sms::sendSms(str_replace('234', '', $user->phone_number), $message);
                 $user->update(['otp' => $rand]);
+                $user->update(['last_login' => now()]);
                 //send sms
             }
 

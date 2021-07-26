@@ -9,7 +9,7 @@ trait Sms
 {
     public static function sendSms($numbers, $message)
     {
-        $subject = "Altectic";
+        $subject = "Altechtic Solutions";
 
         try {
 

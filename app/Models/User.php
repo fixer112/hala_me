@@ -34,6 +34,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'device_id',
+        'fcm_token',
+        'otp',
     ];
 
     protected $appends = ['image_url'];
