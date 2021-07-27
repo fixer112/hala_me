@@ -139,7 +139,7 @@ class MessageController extends Controller
         ]);
         //MessageCreated::dispatch(new MessageResource($message));
 
-        return new MessageResource(Message::find($message->id));
+        return new MessageResource(Message::find($message->id)->load(['chat.users']));
     }
 
     /**
