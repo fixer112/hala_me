@@ -17,7 +17,7 @@ class MessageResource extends JsonResource
         $data = parent::toArray($request);
         $data['chat'] = new ChatResource($this->chat);
         $data['sender'] = new UserResource($this->sender);
-        //$data['replied'] = $this->whenLoaded('repliedMessage');
+        $data['replied'] = $this->repliedMessage ? $this->repliedMessage->load(['sender', 'chat.users']) : null; //$this->whenLoaded('repliedMessage');
         //$data['replied'] = $this->replied;
 
         return $data;
