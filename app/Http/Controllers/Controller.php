@@ -25,5 +25,6 @@ class Controller extends BaseController
 
     public function test()
     {
+        //return new MessageResource(Message::find(17)->load(['chat.users']));
     }
 }
